@@ -1,6 +1,7 @@
 {-
 Samantha Kacir
 CS380 Final Project
+Basic server implementation
 -}
 
 {-# LANGUAGE DataKinds, DeriveGeneric, FlexibleInstances, GADTs,
@@ -11,6 +12,8 @@ module Server where
 
 import Prelude ()
 import Prelude.Compat
+
+import Classes
 
 import Control.Monad.Except
 import Control.Monad.Reader
@@ -37,25 +40,12 @@ import qualified Text.Blaze.Html
 
 type UserAPI1 = "users" :> Get '[JSON] [User]
 
-data Contact where
-  Phone :: String -> Contact
-  Email :: String -> Contact
-  deriving (Eq, Show, Generic)
-
-instance ToJSON Contact
-
-data User = User
-  { name    :: String
-  , contact :: [(Contact, Int)] --mode of contact, number/address, est resp time in min
-  } deriving (Eq, Show, Generic)
-
-instance ToJSON User
-
 users1 :: [User]
-users1 =
-  [ User "Isaac Newton"    [(Email "isaac@newton.co.uk", 120)]
-  , User "Albert Einstein" [(Email "ae@mc2.org"        , 360)]     
-  ]
+--users1 =
+  --[ User "Isaac Newton"    [(Email "isaac@newton.co.uk", 120)]
+  --, User "Albert Einstein" [(Email "ae@mc2.org"        , 360)]     
+  --]
+users1 = [ User "Richard Eisenberg" [NewContact (Email "rae@cs.brynmawr.edu") 48] ]
 
 server1 :: Server UserAPI1
 server1 = return users1
@@ -66,7 +56,7 @@ userAPI = Proxy
 -- 'serve' comes from servant and hands you a WAI Application,
 -- which you can think of as an "abstract" web application,
 -- not yet a webserver.
-app1 :: Application
+app1 :: Servant.Application
 app1 = serve userAPI server1
 
 port :: Int
