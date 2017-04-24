@@ -13,7 +13,7 @@ module Server where
 import Prelude ()
 import Prelude.Compat
 
-import Classes
+import Models
 
 import Control.Monad.Except
 import Control.Monad.Reader
@@ -45,7 +45,7 @@ users1 :: [User]
   --[ User "Isaac Newton"    [(Email "isaac@newton.co.uk", 120)]
   --, User "Albert Einstein" [(Email "ae@mc2.org"        , 360)]     
   --]
-users1 = [ User "Richard Eisenberg" "rae@cs.brynmawr.edu" [NewContact (Email "rae@cs.brynmawr.edu") 48] ]
+users1 = [ User "Richard Eisenberg" "rae@cs.brynmawr.edu" [Email (EmailAddress "rae@cs.brynmawr.edu") (EstRespTime 48.0) ] ]
 
 server1 :: Server UserAPI1
 server1 = return users1
