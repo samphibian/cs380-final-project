@@ -45,7 +45,7 @@ users1 :: [User]
   --[ User "Isaac Newton"    [(Email "isaac@newton.co.uk", 120)]
   --, User "Albert Einstein" [(Email "ae@mc2.org"        , 360)]     
   --]
-users1 = [ User "Richard Eisenberg" [NewContact (Email "rae@cs.brynmawr.edu") 48] ]
+users1 = [ User "Richard Eisenberg" "rae@cs.brynmawr.edu" [NewContact (Email "rae@cs.brynmawr.edu") 48] ]
 
 server1 :: Server UserAPI1
 server1 = return users1

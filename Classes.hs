@@ -12,9 +12,9 @@ module Classes where
 import Data.Aeson.Compat
 import GHC.Generics
 
-import           Database.Persist
-import           Database.Persist.Sqlite
-import           Database.Persist.TH
+import Database.Persist
+import Database.Persist.Sqlite
+import Database.Persist.TH
 
 data Contact where
   Phone :: String -> Contact
@@ -32,6 +32,7 @@ instance ToJSON NewContact
 
 data User = User
   { name    :: String
+  , email   :: String
   , contact :: [NewContact] --mode of contact, number/address, est resp time in hours
   } deriving (Eq, Show, Generic)
 

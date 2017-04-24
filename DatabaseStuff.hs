@@ -7,6 +7,7 @@ Group
 
 User
   name     String     --user's name (maybe split first/last but eh)
+  email    String     --contact for the server
   contacts references --ways to contact the user
 
 Contact
