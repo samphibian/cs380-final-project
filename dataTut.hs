@@ -24,4 +24,3 @@ User
 |]
   
 main = runSqlite ":memory:" $ runMigration migrateAll
-

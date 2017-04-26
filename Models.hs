@@ -95,16 +95,19 @@ isInGroup :: Member -> Group -> Bool
 isInGroup Unknown _ = False
 isInGroup a       g = isIn a (groupies g)
 
+--check if a user is busy
 isBusy :: Current -> User -> Bool
 isBusy Free _   = False
 isBusy (Busy a) u
   | (busy_person a) == u = True
   | otherwise            = False
 
+--find the response time for a contact method
 getResponseTime :: Contact -> Float
 getResponseTime (Phone a t) = (hours t)
 getResponseTime (Email a t) = (hours t)
 
+--find how long each contact method will take to respond
 getResponseTimes :: Member -> Current -> User -> [Float]
 getResponseTimes p s u = case isBusy s u of
                            True -> case s of
@@ -113,27 +116,24 @@ getResponseTimes p s u = case isBusy s u of
                                                  True  -> map getResponseTime (contact u)
                            False -> map getResponseTime (contact u)
 
+--find the mode of contact
 extractContacts :: [Contact] -> [(String, String)]
 extractContacts []       = []
 extractContacts (x : xs) = case x of
                              Phone a _ -> ("Phone: ", (number  a)) : extractContacts xs
                              Email a _ -> ("Email: ", (address a)) : extractContacts xs
 
+--get all mode of contacts for a user
 getContactMethods :: User -> [(String, String)]
 getContactMethods u = case (contact u) of
                         x -> extractContacts x
 
+--concat two lists
 makeDuple :: [a] -> [b] -> [(a, b)]
 makeDuple []       _ = []
 makeDuple _        [] = []
 makeDuple (x : xs) (y : ys) = (x, y) : makeDuple xs ys
 
+--match contact methods with response times
 getContactResponseTimes :: Member -> Current -> User -> [((String, String), Float)]
 getContactResponseTimes m s u = makeDuple (getContactMethods u) (getResponseTimes m s u)
-
---meh.
-addMemberToGroup :: Member -> Group -> Group
-addMemberToGroup m g = Group (group_name g) (owned_by g) (m : (groupies g))
-
-
-
