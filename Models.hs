@@ -62,7 +62,8 @@ data NewContact = NewContact
 instance ToJSON NewContact
 
 data User = User
-  { user_name :: String
+  { user_id   :: Integer
+  , user_name :: String
   , email     :: String    --way for server to contact
   , contact   :: [Contact] --mode of contact, number/address, est resp time in hours
   } deriving (Eq, Show, Generic)
@@ -76,7 +77,8 @@ data Member where
 instance ToJSON Member
 
 data Group = Group
-  { group_name :: String
+  { group_id   :: Integer
+  , group_name :: String
   , owned_by   :: User
   , groupies   :: [Member]
   } deriving(Eq, Show, Generic)

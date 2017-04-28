@@ -40,7 +40,8 @@ import qualified Text.Blaze.Html
 
 type UserAPI1 = "users" :> Get '[JSON] [User]
 
-richard = User "Richard Eisenberg" 
+richard = User 1
+               "Richard Eisenberg" 
                "rae@cs.brynmawr.edu" 
                [Email (EmailAddress "rae@cs.brynmawr.edu") (EstRespTime 48.0) ]
 
@@ -53,7 +54,7 @@ nora = Person ("Nora B")
 charlie = Person ("Charles K")
 stranger = Unknown
 
-haskellClass = Group "cs380" richard [sam, jordan, nora]
+haskellClass = Group 1 "cs380" richard [sam, jordan, nora]
 
 server1 :: Server UserAPI1
 server1 = return users1
