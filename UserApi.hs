@@ -25,7 +25,7 @@ type UserAPI1 =
   "users" :> Capture "user_id" Integer :> Get '[JSON] User :<|>
   "users" :> Capture "user_id" Integer :> "groups" :> Get '[JSON] [Group] :<|>
   "users" :> Capture "user_id" Integer :> Capture "member_name" String :> Get '[JSON] Group :<|>
-  "users" :> Capture "user_id" Integer :> Capture "member_name" String :> Get '[JSON] [Contact]
+  "users" :> Capture "user_id" Integer :> Capture "member_name" String :> "contacts" :> Get '[JSON] [Contact]
 
 getUsers :: Handler [User]
 getUsers = return users1
