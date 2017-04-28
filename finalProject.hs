@@ -43,7 +43,8 @@ import qualified Text.Blaze.Html
 server1 :: Server UserAPI1
 server1 =
   getUsers :<|>
-  getUserById
+  getUserById :<|>
+  getGroupsByUser
 
 userAPI :: Proxy UserAPI1
 userAPI = Proxy
