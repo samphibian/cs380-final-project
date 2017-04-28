@@ -16,6 +16,8 @@ import Database.Persist
 import Database.Persist.Sqlite
 import Database.Persist.TH
 
+import Data.Text hiding ( map, any )
+
 data PhoneNumber = PhoneNumber { number :: String }
   deriving (Eq, Show, Generic)
 
@@ -62,7 +64,8 @@ data NewContact = NewContact
 instance ToJSON NewContact
 
 data User = User
-  { user_name :: String
+  { user_id   :: Integer
+  , user_name :: String
   , email     :: String    --way for server to contact
   , contact   :: [Contact] --mode of contact, number/address, est resp time in hours
   } deriving (Eq, Show, Generic)
@@ -73,10 +76,12 @@ data Member where
   Person  :: String -> Member
   Unknown :: Member
   deriving (Eq, Show, Generic)
+  
 instance ToJSON Member
 
 data Group = Group
-  { group_name :: String
+  { group_id   :: Integer
+  , group_name :: String
   , owned_by   :: User
   , groupies   :: [Member]
   } deriving(Eq, Show, Generic)
@@ -90,6 +95,36 @@ isIn a (x : xs)
   | a == x    = True
   | otherwise = isIn a xs
 
+findUser :: Integer -> [User] -> Maybe User
+findUser i []        = Nothing
+findUser i (x : xs)
+  | i < 0            = Nothing
+  | i == (user_id x) = Just x
+  | otherwise        = findUser i xs
+
+findGroup :: Integer -> [Group] -> Maybe Group
+findGroup i []        = Nothing
+findGroup i (x : xs)
+  | i < 0            = Nothing
+  | i == (group_id x) = Just x
+  | otherwise        = findGroup i xs
+  
+findGroupsByUser :: Integer -> [Group] -> Maybe [Group]
+findGroupsByUser i [] = Nothing
+findGroupsByUser i (x : xs) = case i < 0 of
+                                True   -> Nothing
+                                False  -> case i == (user_id (owned_by x)) of
+                                            True -> case findGroupsByUser i xs of
+                                                      Nothing -> Just (x : [])
+                                                      Just y  -> Just (x : y)
+                                            False -> findGroupsByUser i xs
+
+findGroupByMember :: String -> [Group] -> Maybe Group
+findGroupByMember "" _  = Nothing
+findGroupByMember _  [] = Nothing
+findGroupByMember t  (x : xs) = case isInGroup (Person t) x of
+                                  True  -> Just x
+                                  False -> findGroupByMember t xs
 --check if a member is in a group
 isInGroup :: Member -> Group -> Bool
 isInGroup Unknown _ = False
@@ -134,6 +169,47 @@ makeDuple []       _ = []
 makeDuple _        [] = []
 makeDuple (x : xs) (y : ys) = (x, y) : makeDuple xs ys
 
+newContactResponse :: Float -> Contact -> Contact
+newContactResponse f c = case c of
+                           Phone a o -> Phone a (EstRespTime (f + (hours o)))
+                           Email a o -> Email a (EstRespTime (f + (hours o)))
+
 --match contact methods with response times
-getContactResponseTimes :: Member -> Current -> User -> [((String, String), Float)]
-getContactResponseTimes m s u = makeDuple (getContactMethods u) (getResponseTimes m s u)
+getContactResponseTimes :: Member -> Current -> User -> [Contact]
+getContactResponseTimes  p s u = case isBusy s u of
+                           True -> case s of
+                                     Busy a -> case any (isInGroup p) (group_exceptions a) of
+                                                 False -> map (newContactResponse (contact_delayed a)) (contact u)
+                                                 True  -> contact u
+                           False -> contact u
+
+getAllContactsByMember :: String -> User -> Current -> [Contact]
+getAllContactsByMember "" u n = getContactResponseTimes Unknown    n u 
+getAllContactsByMember m  u n = getContactResponseTimes (Person m) n u
+
+--example models
+richardContacts = [ Email (EmailAddress "rae@cs.brynmawr.edu") (EstRespTime 24.0)
+                  , Email (EmailAddress "rae@brynmawr.edu") (EstRespTime 48.0) ]
+
+richard = User 1
+               "Richard Eisenberg" 
+               "rae@cs.brynmawr.edu" 
+               richardContacts
+
+users1 :: [User]
+users1 = [ richard ]
+
+sam = Person ("Samantha K")
+jordan = Person ("Jordan H")
+nora = Person ("Nora B")
+charlie = Person ("Charles K")
+kid = Person ("Little E")
+stranger = Unknown
+
+haskellClass = Group 2 "cs380" richard [sam, jordan, nora]
+family = Group 1 "family" richard [kid]
+
+groups1 :: [Group]
+groups1 = [ family, haskellClass ]
+
+weekend = Conflict richard 48 richardContacts [ family ]
