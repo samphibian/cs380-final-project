@@ -12,3 +12,5 @@ cabal packages:
   * aeson-compat
   * lucid
   * wai
+
+https://github.com/haskell-servant/example-servant-minimal/blob/master/src/App.hs
