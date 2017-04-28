@@ -169,20 +169,32 @@ makeDuple []       _ = []
 makeDuple _        [] = []
 makeDuple (x : xs) (y : ys) = (x, y) : makeDuple xs ys
 
+newContactResponse :: Float -> Contact -> Contact
+newContactResponse f c = case c of
+                           Phone a o -> Phone a (EstRespTime (f + (hours o)))
+                           Email a o -> Email a (EstRespTime (f + (hours o)))
+
 --match contact methods with response times
-getContactResponseTimes :: Member -> Current -> User -> [((String, String), Float)]
-getContactResponseTimes m s u = makeDuple (getContactMethods u) (getResponseTimes m s u)
+getContactResponseTimes :: Member -> Current -> User -> [Contact]
+getContactResponseTimes  p s u = case isBusy s u of
+                           True -> case s of
+                                     Busy a -> case any (isInGroup p) (group_exceptions a) of
+                                                 False -> map (newContactResponse (contact_delayed a)) (contact u)
+                                                 True  -> contact u
+                           False -> contact u
 
 getAllContactsByMember :: String -> User -> Current -> [Contact]
-getAllContactsByMember m u n = contact u
+getAllContactsByMember "" u n = getContactResponseTimes Unknown    n u 
+getAllContactsByMember m  u n = getContactResponseTimes (Person m) n u
 
 --example models
-richardEmail = Email (EmailAddress "rae@cs.brynmawr.edu") (EstRespTime 48.0)
+richardContacts = [ Email (EmailAddress "rae@cs.brynmawr.edu") (EstRespTime 24.0)
+                  , Email (EmailAddress "rae@brynmawr.edu") (EstRespTime 48.0) ]
 
 richard = User 1
                "Richard Eisenberg" 
                "rae@cs.brynmawr.edu" 
-               [ richardEmail ]
+               richardContacts
 
 users1 :: [User]
 users1 = [ richard ]
@@ -200,4 +212,4 @@ family = Group 1 "family" richard [kid]
 groups1 :: [Group]
 groups1 = [ family, haskellClass ]
 
-weekend = Conflict richard 48 [ richardEmail ] [ family ]
+weekend = Conflict richard 48 richardContacts [ family ]
