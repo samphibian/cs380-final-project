@@ -19,7 +19,7 @@ import Data.String.Conversions
 import GHC.Generics
 import Servant
 
-type GroupAPI =
+type GroupAPI1 =
   "groups" :> Get '[JSON] [Group] :<|>
   "groups" :> Capture "group_id" Integer :> Get '[JSON] Group
 

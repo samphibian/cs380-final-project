@@ -74,7 +74,7 @@ data Member where
   Person  :: String -> Member
   Unknown :: Member
   deriving (Eq, Show, Generic)
-  
+
 instance ToJSON Member
 
 data Group = Group
@@ -85,6 +85,18 @@ data Group = Group
   } deriving(Eq, Show, Generic)
 
 instance ToJSON Group
+
+data Model where
+  GroupModel :: Group -> Model
+  UserModel  :: User  -> Model
+
+modelizeUsers :: [User] -> [Model]
+modelizeUsers [] = []
+modelizeUsers (x : xs) = (UserModel x) : modelizeUsers xs
+
+modelizeGroups :: [Group] -> [Model]
+modelizeGroups [] = []
+modelizeGroups (x : xs) = (GroupModel x) : modelizeGroups xs
 
 --check if an element is in an array
 isIn :: Eq a => a -> [a] -> Bool
@@ -106,6 +118,13 @@ findGroup i (x : xs)
   | i < 0            = Nothing
   | i == (group_id x) = Just x
   | otherwise        = findGroup i xs
+
+findGroupsByUser :: Integer -> [Group] -> Maybe Group
+findGroupsByUser i [] = Nothing
+findGroupsByUser i (x : xs)
+  | i < 0 = Nothing
+  | i == (user_id (owned_by x)) = Just x
+  | otherwise = findGroupsByUser i xs
 
 --check if a member is in a group
 isInGroup :: Member -> Group -> Bool
