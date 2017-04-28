@@ -14,6 +14,8 @@ import Prelude ()
 import Prelude.Compat
 
 import Models
+import UserApi
+import GroupApi
 
 import Control.Monad.Except
 import Control.Monad.Reader
@@ -38,26 +40,10 @@ import Text.Blaze.Html.Renderer.Utf8
 import qualified Data.Aeson.Parser
 import qualified Text.Blaze.Html
 
-type UserAPI1 = "users" :> Get '[JSON] [User]
-
-richard = User 1
-               "Richard Eisenberg" 
-               "rae@cs.brynmawr.edu" 
-               [Email (EmailAddress "rae@cs.brynmawr.edu") (EstRespTime 48.0) ]
-
-users1 :: [User]
-users1 = [ richard ]
-
-sam = Person ("Samantha K")
-jordan = Person ("Jordan H")
-nora = Person ("Nora B")
-charlie = Person ("Charles K")
-stranger = Unknown
-
-haskellClass = Group 1 "cs380" richard [sam, jordan, nora]
-
 server1 :: Server UserAPI1
-server1 = return users1
+server1 =
+  getUsers :<|>
+  getUserById
 
 userAPI :: Proxy UserAPI1
 userAPI = Proxy

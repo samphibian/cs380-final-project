@@ -74,6 +74,7 @@ data Member where
   Person  :: String -> Member
   Unknown :: Member
   deriving (Eq, Show, Generic)
+  
 instance ToJSON Member
 
 data Group = Group
@@ -91,6 +92,20 @@ isIn _ []     = False
 isIn a (x : xs)
   | a == x    = True
   | otherwise = isIn a xs
+
+findUser :: Integer -> [User] -> Maybe User
+findUser i []        = Nothing
+findUser i (x : xs)
+  | i < 0            = Nothing
+  | i == (user_id x) = Just x
+  | otherwise        = findUser i xs
+
+findGroup :: Integer -> [Group] -> Maybe Group
+findGroup i []        = Nothing
+findGroup i (x : xs)
+  | i < 0            = Nothing
+  | i == (group_id x) = Just x
+  | otherwise        = findGroup i xs
 
 --check if a member is in a group
 isInGroup :: Member -> Group -> Bool
@@ -139,3 +154,24 @@ makeDuple (x : xs) (y : ys) = (x, y) : makeDuple xs ys
 --match contact methods with response times
 getContactResponseTimes :: Member -> Current -> User -> [((String, String), Float)]
 getContactResponseTimes m s u = makeDuple (getContactMethods u) (getResponseTimes m s u)
+
+--example models
+
+richard = User 1
+               "Richard Eisenberg" 
+               "rae@cs.brynmawr.edu" 
+               [Email (EmailAddress "rae@cs.brynmawr.edu") (EstRespTime 48.0) ]
+
+users1 :: [User]
+users1 = [ richard ]
+
+sam = Person ("Samantha K")
+jordan = Person ("Jordan H")
+nora = Person ("Nora B")
+charlie = Person ("Charles K")
+stranger = Unknown
+
+haskellClass = Group 1 "cs380" richard [sam, jordan, nora]
+
+groups1 :: [Group]
+groups1 = [ haskellClass ]
