@@ -106,6 +106,13 @@ findGroup i (x : xs)
   | i < 0            = Nothing
   | i == (group_id x) = Just x
   | otherwise        = findGroup i xs
+  
+findGroupsByUser :: Integer -> [Group] -> Maybe Group
+findGroupsByUser i [] = Nothing
+findGroupsByUser i (x : xs)
+  | i < 0 = Nothing
+  | i == (user_id (owned_by x)) = Just x
+  | otherwise = findGroupsByUser i xs
 
 --check if a member is in a group
 isInGroup :: Member -> Group -> Bool
