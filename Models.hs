@@ -16,6 +16,8 @@ import Database.Persist
 import Database.Persist.Sqlite
 import Database.Persist.TH
 
+import Data.Text hiding ( map, any )
+
 data PhoneNumber = PhoneNumber { number :: String }
   deriving (Eq, Show, Generic)
 
@@ -107,13 +109,22 @@ findGroup i (x : xs)
   | i == (group_id x) = Just x
   | otherwise        = findGroup i xs
   
-findGroupsByUser :: Integer -> [Group] -> Maybe Group
+findGroupsByUser :: Integer -> [Group] -> Maybe [Group]
 findGroupsByUser i [] = Nothing
-findGroupsByUser i (x : xs)
-  | i < 0 = Nothing
-  | i == (user_id (owned_by x)) = Just x
-  | otherwise = findGroupsByUser i xs
+findGroupsByUser i (x : xs) = case i < 0 of
+                                True   -> Nothing
+                                False  -> case i == (user_id (owned_by x)) of
+                                            True -> case findGroupsByUser i xs of
+                                                      Nothing -> Just (x : [])
+                                                      Just y  -> Just (x : y)
+                                            False -> findGroupsByUser i xs
 
+findGroupByMember :: String -> [Group] -> Maybe Group
+findGroupByMember "" _  = Nothing
+findGroupByMember _  [] = Nothing
+findGroupByMember t  (x : xs) = case isInGroup (Person t) x of
+                                  True  -> Just x
+                                  False -> findGroupByMember t xs
 --check if a member is in a group
 isInGroup :: Member -> Group -> Bool
 isInGroup Unknown _ = False
@@ -162,12 +173,16 @@ makeDuple (x : xs) (y : ys) = (x, y) : makeDuple xs ys
 getContactResponseTimes :: Member -> Current -> User -> [((String, String), Float)]
 getContactResponseTimes m s u = makeDuple (getContactMethods u) (getResponseTimes m s u)
 
+getAllContactsByMember :: String -> User -> Current -> [Contact]
+getAllContactsByMember m u n = contact u
+
 --example models
+richardEmail = Email (EmailAddress "rae@cs.brynmawr.edu") (EstRespTime 48.0)
 
 richard = User 1
                "Richard Eisenberg" 
                "rae@cs.brynmawr.edu" 
-               [Email (EmailAddress "rae@cs.brynmawr.edu") (EstRespTime 48.0) ]
+               [ richardEmail ]
 
 users1 :: [User]
 users1 = [ richard ]
@@ -176,9 +191,13 @@ sam = Person ("Samantha K")
 jordan = Person ("Jordan H")
 nora = Person ("Nora B")
 charlie = Person ("Charles K")
+kid = Person ("Little E")
 stranger = Unknown
 
-haskellClass = Group 1 "cs380" richard [sam, jordan, nora]
+haskellClass = Group 2 "cs380" richard [sam, jordan, nora]
+family = Group 1 "family" richard [kid]
 
 groups1 :: [Group]
-groups1 = [ haskellClass ]
+groups1 = [ family, haskellClass ]
+
+weekend = Conflict richard 48 [ richardEmail ] [ family ]

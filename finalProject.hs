@@ -44,7 +44,9 @@ server1 :: Server UserAPI1
 server1 =
   getUsers :<|>
   getUserById :<|>
-  getGroupsByUser
+  getGroupsByUser :<|>
+  getGroupByMember :<|>
+  getContactsByMember
 
 userAPI :: Proxy UserAPI1
 userAPI = Proxy
