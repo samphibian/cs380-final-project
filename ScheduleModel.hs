@@ -26,6 +26,7 @@ data Time = Time
   }deriving (Eq, Show, Generic)
 
 instance ToJSON Time
+instance FromJSON Time
 
 data Date where
   Monday    :: Date
@@ -38,6 +39,7 @@ data Date where
   deriving (Eq, Show, Generic)
 
 instance ToJSON Date
+instance FromJSON Date
 
 --ending day -> when it repeats (start day)
 data Repeats where
@@ -49,6 +51,7 @@ data Repeats where
   deriving (Eq, Show, Generic)
 
 instance ToJSON Repeats
+instance FromJSON Repeats
 
 data Schedule = Schedule
   { start_date :: Day --Year month (Int) day
@@ -60,6 +63,7 @@ data Schedule = Schedule
   }deriving (Eq, Show, Generic)
 
 instance ToJSON Schedule
+instance FromJSON Schedule
 
 getDiffTime :: Time -> DiffTime
 getDiffTime t = secondsToDiffTime (toInteger (3600*(hour t) + 60*(minutes t)))
@@ -77,6 +81,9 @@ getUserConflict (x : xs) u = do
 mary = fromGregorian 2015 2 1
 bob = fromGregorian 2017 3 15
 
+--or at least probably of computers as we know them 
+endOfTheWorld = fromGregorian 2121 2 1
+
 hereandnow :: IO()
 hereandnow = do
   fred <- getCurrentTime
@@ -88,4 +95,4 @@ hereandnow = do
   print barb
   print rich
 
-richardSchedule = Schedule (fromGregorian 2017 3 28) (Time 16 0) (fromGregorian 2017 5 1) (Time 14 0) Once weekend
+richardSchedule = Schedule (fromGregorian 2017 3 28) (Time 16 0) (fromGregorian 2017 5 1) (Time 14 0) (Weekly endOfTheWorld [Friday]) weekend

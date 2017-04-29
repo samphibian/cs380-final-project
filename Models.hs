@@ -22,16 +22,19 @@ data PhoneNumber = PhoneNumber { number :: String }
   deriving (Eq, Show, Generic)
 
 instance ToJSON PhoneNumber
+instance FromJSON PhoneNumber
 
 data EmailAddress = EmailAddress { address :: String }
   deriving (Eq, Show, Generic)
 
 instance ToJSON EmailAddress
+instance FromJSON EmailAddress
 
 data EstRespTime = EstRespTime { hours :: Float }
   deriving (Eq, Show, Generic)
 
 instance ToJSON EstRespTime
+instance FromJSON EstRespTime
 
 data Conflict = Conflict 
   { busy_person      :: User      --person who has the conflict
@@ -41,6 +44,7 @@ data Conflict = Conflict
   } deriving (Eq, Show, Generic)
 
 instance ToJSON Conflict
+instance FromJSON Conflict
 
 data Current where
   Free :: Current
@@ -48,6 +52,7 @@ data Current where
   deriving (Eq, Show, Generic)
 
 instance ToJSON Current
+instance FromJSON Current
 
 data Contact where
   Phone :: PhoneNumber  -> EstRespTime -> Contact
@@ -55,6 +60,7 @@ data Contact where
   deriving (Eq, Show, Generic)
 
 instance ToJSON Contact
+instance FromJSON Contact
 
 data NewContact = NewContact
   { modeOfContact :: Contact
@@ -62,6 +68,7 @@ data NewContact = NewContact
   } deriving (Eq, Show, Generic)
 
 instance ToJSON NewContact
+instance FromJSON NewContact
 
 data User = User
   { user_id   :: Integer
@@ -71,6 +78,7 @@ data User = User
   } deriving (Eq, Show, Generic)
 
 instance ToJSON User
+instance FromJSON User
 
 data Member where
   Person  :: String -> Member
@@ -78,6 +86,7 @@ data Member where
   deriving (Eq, Show, Generic)
   
 instance ToJSON Member
+instance FromJSON Member
 
 data Group = Group
   { group_id   :: Integer
@@ -87,6 +96,7 @@ data Group = Group
   } deriving(Eq, Show, Generic)
 
 instance ToJSON Group
+instance FromJSON Group
 
 --check if an element is in an array
 isIn :: Eq a => a -> [a] -> Bool
