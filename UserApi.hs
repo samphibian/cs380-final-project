@@ -8,6 +8,7 @@ import Prelude ()
 import Prelude.Compat
 
 import Models
+import ScheduleModel
 
 import Control.Monad.Except
 import Control.Monad.Reader
@@ -18,6 +19,7 @@ import Data.Maybe
 import Data.Text
 import Data.String.Conversions
 import GHC.Generics
+import System.IO.Unsafe
 import Servant
   
 type UserAPI1 = 
@@ -50,6 +52,8 @@ getGroupByMember i m = case findGroupsByUser i groups1 of
 getContactsByMember :: Integer -> String -> Handler [Contact]
 getContactsByMember i m = case findUser i users1 of
                             Nothing -> throwError err404
-                            Just x  -> return (getAllContactsByMember m x now)
+                            Just x  -> return (getAllContactsByMember m x (unsafePerformIO (getUserConflict schedules x)))
 
-now = Busy weekend
+nowWeekend = Busy weekend
+
+schedules = [ richardSchedule ]
