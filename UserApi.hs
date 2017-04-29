@@ -8,6 +8,7 @@ import Prelude ()
 import Prelude.Compat
 
 import Models
+import ScheduleModel
 
 import Control.Monad.Except
 import Control.Monad.Reader

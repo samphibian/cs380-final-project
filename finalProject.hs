@@ -15,7 +15,6 @@ import Prelude.Compat
 
 import Models
 import UserApi
-import GroupApi
 
 import Control.Monad.Except
 import Control.Monad.Reader
