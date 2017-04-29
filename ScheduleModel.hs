@@ -77,6 +77,9 @@ getUserConflict (x : xs) u = do
 mary = fromGregorian 2015 2 1
 bob = fromGregorian 2017 3 15
 
+--or at least probably of computers as we know them 
+endOfTheWorld = fromGregorian 2121 2 1
+
 hereandnow :: IO()
 hereandnow = do
   fred <- getCurrentTime
@@ -88,4 +91,4 @@ hereandnow = do
   print barb
   print rich
 
-richardSchedule = Schedule (fromGregorian 2017 3 28) (Time 16 0) (fromGregorian 2017 5 1) (Time 14 0) Once weekend
+richardSchedule = Schedule (fromGregorian 2017 3 28) (Time 16 0) (fromGregorian 2017 5 1) (Time 14 0) (Weekly endOfTheWorld [Friday]) weekend
