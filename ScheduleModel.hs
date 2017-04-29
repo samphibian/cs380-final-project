@@ -36,14 +36,26 @@ data Date where
   Saturday  :: Date
   Sunday    :: Date
   deriving (Eq, Show, Generic)
-  
+
 instance ToJSON Date
+
+--ending day -> when it repeats (start day)
+data Repeats where
+  Daily   :: Day -> Repeats
+  Weekly  :: Day -> [Date] -> Repeats
+  Monthly :: Day -> [Int]  -> Repeats
+  Yearly  :: Day -> [Day]  -> Repeats
+  Once    :: Repeats
+  deriving (Eq, Show, Generic)
+
+instance ToJSON Repeats
 
 data Schedule = Schedule
   { start_date :: Day --Year month (Int) day
   , start_time :: Time
   , end_date   :: Day
   , end_time   :: Time
+  , repeats    :: Repeats
   , conflicting_event :: Conflict
   }deriving (Eq, Show, Generic)
 
@@ -76,4 +88,4 @@ hereandnow = do
   print barb
   print rich
 
-richardSchedule = Schedule (fromGregorian 2017 3 28) (Time 16 0) (fromGregorian 2017 5 1) (Time 14 0) weekend
+richardSchedule = Schedule (fromGregorian 2017 3 28) (Time 16 0) (fromGregorian 2017 5 1) (Time 14 0) Once weekend
