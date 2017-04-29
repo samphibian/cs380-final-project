@@ -36,33 +36,8 @@ data Date where
   Saturday  :: Date
   Sunday    :: Date
   deriving (Eq, Show, Generic)
+  
 instance ToJSON Date
-
-data Month where
-  January   :: Month
-  February  :: Month
-  March     :: Month
-  April     :: Month
-  May       :: Month
-  June      :: Month
-  July      :: Month
-  August    :: Month
-  September :: Month
-  October   :: Month
-  November  :: Month
-  December  :: Month
-  deriving (Eq, Show, Generic)
-instance ToJSON Month
-
-data FullDate = FullDate
-  { day_of_the_week :: Date 
-  , month           :: Month
-  , day             :: Int
-  , year            :: Int
-  }deriving (Eq, Show, Generic)
-
-instance ToJSON FullDate
-
 
 data Schedule = Schedule
   { start_date :: Day --Year month (Int) day
