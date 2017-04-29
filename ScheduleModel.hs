@@ -26,6 +26,7 @@ data Time = Time
   }deriving (Eq, Show, Generic)
 
 instance ToJSON Time
+instance FromJSON Time
 
 data Date where
   Monday    :: Date
@@ -38,6 +39,7 @@ data Date where
   deriving (Eq, Show, Generic)
 
 instance ToJSON Date
+instance FromJSON Date
 
 --ending day -> when it repeats (start day)
 data Repeats where
@@ -49,6 +51,7 @@ data Repeats where
   deriving (Eq, Show, Generic)
 
 instance ToJSON Repeats
+instance FromJSON Repeats
 
 data Schedule = Schedule
   { start_date :: Day --Year month (Int) day
@@ -60,6 +63,7 @@ data Schedule = Schedule
   }deriving (Eq, Show, Generic)
 
 instance ToJSON Schedule
+instance FromJSON Schedule
 
 getDiffTime :: Time -> DiffTime
 getDiffTime t = secondsToDiffTime (toInteger (3600*(hour t) + 60*(minutes t)))
