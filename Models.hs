@@ -1,6 +1,7 @@
 {-
 Samantha Kacir
 CS380 Final Project
+Defining the models necessary for the api
 -}
 
 {-# LANGUAGE DataKinds, DeriveGeneric, FlexibleInstances, GADTs,
@@ -115,23 +116,23 @@ findUser i (x : xs)
 findGroup :: Integer -> [Group] -> Maybe Group
 findGroup i []        = Nothing
 findGroup i (x : xs)
-  | i < 0            = Nothing
+  | i < 0             = Nothing
   | i == (group_id x) = Just x
-  | otherwise        = findGroup i xs
+  | otherwise         = findGroup i xs
   
 findGroupsByUser :: Integer -> [Group] -> Maybe [Group]
-findGroupsByUser i [] = Nothing
+findGroupsByUser i []       = Nothing
 findGroupsByUser i (x : xs) = case i < 0 of
                                 True   -> Nothing
                                 False  -> case i == (user_id (owned_by x)) of
-                                            True -> case findGroupsByUser i xs of
-                                                      Nothing -> Just (x : [])
-                                                      Just y  -> Just (x : y)
+                                            True  -> case findGroupsByUser i xs of
+                                                       Nothing -> Just (x : [])
+                                                       Just y  -> Just (x : y)
                                             False -> findGroupsByUser i xs
 
 findGroupByMember :: String -> [Group] -> Maybe Group
-findGroupByMember "" _  = Nothing
-findGroupByMember _  [] = Nothing
+findGroupByMember "" _        = Nothing
+findGroupByMember _  []       = Nothing
 findGroupByMember t  (x : xs) = case isInGroup (Person t) x of
                                   True  -> Just x
                                   False -> findGroupByMember t xs
@@ -142,7 +143,7 @@ isInGroup a       g = isIn a (groupies g)
 
 --check if a user is busy
 isBusy :: Current -> User -> Bool
-isBusy Free _   = False
+isBusy Free     _        = False
 isBusy (Busy a) u
   | (busy_person a) == u = True
   | otherwise            = False
@@ -175,8 +176,8 @@ getContactMethods u = case (contact u) of
 
 --concat two lists
 makeDuple :: [a] -> [b] -> [(a, b)]
-makeDuple []       _ = []
-makeDuple _        [] = []
+makeDuple []       _        = []
+makeDuple _        []       = []
 makeDuple (x : xs) (y : ys) = (x, y) : makeDuple xs ys
 
 newContactResponse :: Float -> Contact -> Contact

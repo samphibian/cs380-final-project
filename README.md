@@ -38,8 +38,9 @@ TODO:
   
 cabal packages:
   * servant
-  * servant-server
   * servant-blaze
+  * servant-cassava
+  * servant-server
   * persistent
   * persistent-sqlite
   * persistent-template
