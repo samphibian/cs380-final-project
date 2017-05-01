@@ -96,4 +96,4 @@ hereandnow = do
   print barb
   print rich
 
-richardSchedule = Schedule (fromGregorian 2017 3 28) (Time 16 0) (fromGregorian 2017 5 1) (Time 14 0) (Weekly endOfTheWorld [Friday]) weekend
+richardSchedule = Schedule (fromGregorian 2017 5 1) (Time 12 0) (fromGregorian 2017 5 1) (Time 18 0) (Weekly endOfTheWorld [Friday]) haskellFinal

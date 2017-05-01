@@ -8,7 +8,7 @@ Basic server implementation
              GeneralizedNewtypeDeriving, MultiParamTypeClasses,
              OverloadedStrings, ScopedTypeVariables, TypeOperators #-}
 
-module Server where
+module Main where
 
 import Prelude ()
 import Prelude.Compat
@@ -62,6 +62,6 @@ port = 8080
 main :: IO ()
 main = do
   putStr "Listening on Port "
-  putStr (show port)
-  hFlush stdout
+  putStrLn (show port)
+  putStrLn "Ctrl-C to quit"
   run port app1

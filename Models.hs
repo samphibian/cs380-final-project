@@ -224,3 +224,4 @@ groups1 :: [Group]
 groups1 = [ family, haskellClass ]
 
 weekend = Conflict richard 48 richardContacts [ family ]
+haskellFinal  = Conflict richard 6 richardContacts [ haskellClass ]
