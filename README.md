@@ -4,8 +4,9 @@ This project is the final project for CS380 - Modern Functional Programming as t
 
 cabal packages:
   * servant
-  * servant-server
   * servant-blaze
+  * servant-cassava
+  * servant-server
   * persistent
   * persistent-sqlite
   * persistent-template

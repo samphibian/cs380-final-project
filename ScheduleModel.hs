@@ -1,6 +1,7 @@
 {-
 Samantha Kacir
 CS380 Final Project
+Defines the schedule stuff
 -}
 
 {-# LANGUAGE DataKinds, DeriveGeneric, FlexibleInstances, GADTs,
