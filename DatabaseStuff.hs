@@ -15,4 +15,6 @@ Contact
   address String -- eg 123-456-7890/username@email.com
   estResp Float  -- estimated response time in hours
 
+https://hbtvl.wordpress.com/2015/06/28/servant-persistent-and-dsls/
+
 -}

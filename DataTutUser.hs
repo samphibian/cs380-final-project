@@ -1,19 +1,17 @@
 {-# LANGUAGE QuasiQuotes, TemplateHaskell, TypeFamilies, MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings, GADTs, FlexibleContexts, GeneralizedNewtypeDeriving #-}
 
+module DataTutUser where 
+
 import Data.Text (Text)
 
 import           Database.Persist
 import           Database.Persist.Sqlite
 import           Database.Persist.TH
 
-import DataTutUser
-  
-share [mkPersist sqlSettings, mkMigrate "migrateGroup"] [persistLowerCase|
-Group
+share [mkPersist sqlSettings, mkMigrate "migrateUser"] [persistLowerCase|
+User
     name String
-    user UserId
+    email String
     deriving Show
 |]
-
-main = runSqlite ":memory:" $ runMigration migrateGroup
