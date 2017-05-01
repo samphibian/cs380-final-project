@@ -40,7 +40,7 @@ getUsers = return users1
 getUserById :: Integer -> Handler User
 getUserById i = case findUser i users1 of
                   Just x  -> return x
-                  Nothing -> throwError err404
+                  Nothing -> throwError err404 { errBody = "Sorry dear user." }
 
 getGroupsByUser :: Integer -> Handler [Group]
 getGroupsByUser i = case findGroupsByUser i groups1 of

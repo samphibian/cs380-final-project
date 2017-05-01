@@ -65,3 +65,19 @@ main = do
   putStrLn (show port)
   putStrLn "Ctrl-C to quit"
   run port app1
+
+  
+
+type World =
+  TVar (Map String [Int])
+
+type Effects =
+  ExceptT ServantErr (ReaderT World IO)
+
+server :: World -> Server API
+server world =
+  enter (Nat transform) get
+  where
+    transform :: Effects a -> ExceptT ServantErr IO a
+    transform (ExceptT foo) =
+      ExceptT $ runReaderT foo world
