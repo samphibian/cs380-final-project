@@ -1,12 +1,16 @@
 #final project
 
 This project is the final project for CS380 - Modern Functional Programming as taught by Richard Eisenberg at Bryn Mawr College. It is designed to be a contact API.
+
 In the finalProject.hs file, the server is set up and can be run by ghci finalProject.hs -> main. It can be killed using ctrl-c
 
 
 API Endpoints
+
 *note that listOf_ items are database entries and the database doesn't exist yet*
+
 *all of the find_ functions and the definitions of User, Conflict, and Group are located in Models.hs*
+
 *getUserConflict and the definitions of Schedule related items (excluding Conflict) are in ScheduleModel.hs*
 * users
   * getUsers
