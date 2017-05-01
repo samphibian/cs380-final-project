@@ -22,7 +22,7 @@ import Data.Time
 import Models
 
 data Time = Time
-  { hour   :: Int
+  { hour    :: Int
   , minutes :: Int
   }deriving (Eq, Show, Generic)
 
@@ -55,11 +55,11 @@ instance ToJSON Repeats
 instance FromJSON Repeats
 
 data Schedule = Schedule
-  { start_date :: Day --Year month (Int) day
-  , start_time :: Time
-  , end_date   :: Day
-  , end_time   :: Time
-  , repeats    :: Repeats
+  { start_date        :: Day --Year month (Int) day
+  , start_time        :: Time
+  , end_date          :: Day
+  , end_time          :: Time
+  , repeats           :: Repeats
   , conflicting_event :: Conflict
   }deriving (Eq, Show, Generic)
 
@@ -80,7 +80,7 @@ getUserConflict (x : xs) u = do
                                            False -> getUserConflict xs u
 
 mary = fromGregorian 2015 2 1
-bob = fromGregorian 2017 3 15
+bob  = fromGregorian 2017 3 15
 
 --or at least probably of computers as we know them 
 endOfTheWorld = fromGregorian 2121 2 1
